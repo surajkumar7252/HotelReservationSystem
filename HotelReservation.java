@@ -12,25 +12,33 @@ import org.apache.logging.log4j.Logger;
 
  class Hotels {
 	private String nameOfHotel;
-	private int dailyRent;
+	private int weekDayRate;
+	private int weekEndRate;
 	
-	public Hotels(String nameOfHotel, int dailyRent) {
+	public Hotels(String nameOfHotel, int weekDayRate,int weekEndRate) {
 		
 		this.nameOfHotel = nameOfHotel;
-		this.dailyRent = dailyRent;
+		this.weekDayRate =  weekDayRate;
+		this.weekEndRate =   weekEndRate;
 	}
 	
 	public String getName() {
 		return nameOfHotel;
 	}
-	public void setName(String name) {
-		this.nameOfHotel = name;
+	public void setName(String nameOfHotel) {
+		this.nameOfHotel = nameOfHotel;
 	}
-	public int getRate() {
-		return dailyRent;
+	public int getWeekDayRate() {
+		return weekDayRate;
 	}
-	public void setRate(int rate) {
-		this.dailyRent = rate;
+	public void setWeekDayRate(int rate) {
+		this. weekDayRate = weekDayRate;
+	}
+	public int getWeekEndRate() {
+		return weekEndRate;
+	}
+	public void setWeekEndRate(int rate) {
+		this. weekEndRate = weekEndRate;
 	}
 }
 
@@ -44,9 +52,12 @@ public class HotelReservation {
 		while(choice=='Y'|| choice=='y') {
 			log.info("Enter  name of the hotel: ");
 			String nameOfHotel=inputFeed.nextLine();
-			log.info("Enter cost of staying in hotel: ");
-			int dailyRent=inputFeed.nextInt();
-			Hotels hotelOb=new Hotels(nameOfHotel,dailyRent);
+			log.info("which rate do you want to apply : ");
+			log.info("Enter Week-Day cost of staying in hotel: ");
+			int weekDayRent=inputFeed.nextInt();
+			log.info("Enter week-End cost of staying in hotel: ");
+			int weekEndRent=inputFeed.nextInt();
+			Hotels hotelOb=new Hotels(nameOfHotel,weekDayRent,weekEndRent);
 			listOfHotels.add(hotelOb);
 			log.info("Do you want to perform again: ");
 			choice=inputFeed.next().charAt(0);
@@ -63,16 +74,16 @@ public class HotelReservation {
 			LocalDate checkInFeed= LocalDate.parse(checkInDate, dateFormat);
 			LocalDate checkOutFeed = LocalDate.parse(checkOutDate, dateFormat);
 			Integer numOfDays = (Integer) ChronoUnit.DAYS.between(checkInDate,checkOutDate) + 1;
-			Map<Hotels, Integer> hotelRateMap=listOfHotels.stream().collect(Collectors.toMap(hotelOb->hotelOb, hotelOb->hotelOb.getRate()*numOfDays));
+			Map<Hotels, Integer> hotelRateMap=listOfHotels.stream().collect(Collectors.toMap(hotelOb->hotelOb, hotelOb->hotelOb.getWeekDayRate()*numOfDays));
 			Hotels cheapestHotelInAll=hotelRateMap.keySet().stream().min((n1,n2)->hotelRateMap.get(n1)-hotelRateMap.get(n2)).orElse(null);
 			log.info(cheapestHotelInAll.getName()+",Rate(in Dollars) : "+hotelRateMap.get(cheapestHotelInAll));
 			log.info("The cheapest Hotel is :"+ cheapestHotelInAll);
 		}
 	
 	
-	public static void main( String[] args ){
-        Integer choice=0;
-       HotelReservation reservation=new HotelReservation ();
+	public static void main( String[] args )
+    {   Integer choice=0;
+    HotelReservation reservation=new HotelReservation ();
        log.info( "Welcome to Hotel Reservation System" );
        log.info("What operation do you want to perform: ");
        log.info("1.Adding Hotels Data. ");
@@ -88,5 +99,6 @@ public class HotelReservation {
 	           break;
 	  }
        
-        }
-   }
+    }
+
+}

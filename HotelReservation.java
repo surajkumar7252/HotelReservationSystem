@@ -37,10 +37,10 @@ import org.apache.logging.log4j.Logger;
 		specialWeekEndRate= specialWeekEndRateOfHotel;
 		Matcher PROGRAM_TYPE_MATCHER  =  PROGRAM_TYPE_PATTERN.matcher(programtypeGiven);
 		
-		ProgramType programType = ProgramType.REGULAR;
+		ProgramType programType = ProgramType.REWARDS;
 		if (PROGRAM_TYPE_MATCHER.find()) {
-			if (PROGRAM_TYPE_MATCHER.group().equals("Rewards")) {
-				programType =ProgramType.REWARDS;
+			if (PROGRAM_TYPE_MATCHER.group().equals("Regular")) {
+				programType =ProgramType.REGULAR;
 			}
 		}
 			

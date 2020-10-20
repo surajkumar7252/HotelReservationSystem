@@ -82,7 +82,7 @@ public class HotelReservation {
 			
 			Map<Hotels, Integer> hotelRateMap=listOfHotels.stream().collect(Collectors.toMap<(hotelOb->hotelOb.getName(),hotelOb->hotelOb.getWeekDayRate()* numOfWeekDays,hotelOb->hotelOb.getWeekEndRate()*numofWeekEnds));
 			
-			Hotels cheapestHotelInAll=hotelRateMap.keySet().stream().min((n1,n2)->hotelRateMap.get(n1)-hotelRateMap.get(n2)).orElse(null);
+			Hotels cheapestHotelInAll=hotelRateMap.keySet().stream().min((firstHotel,secondHotel)->hotelRateMap.get(firstHotel)-hotelRateMap.get(secondHotel)).orElse(null);
 			log.info(cheapestHotelInAll.getName()+",Rate(in Dollars) : "+hotelRateMap.get(cheapestHotelInAll));
 			log.info("The cheapest Hotel is :"+ cheapestHotelInAll);
 		}

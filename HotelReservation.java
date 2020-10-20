@@ -1,6 +1,7 @@
 package hotelreservationsystem;
 
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -11,34 +12,34 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
  class Hotels {
-	private String nameOfHotel;
-	private int weekDayRate;
-	private int weekEndRate;
+	public static String nameOfHotel;
+	public static int weekDayRate;
+	public static int weekEndRate;
 	
-	public Hotels(String nameOfHotel, int weekDayRate,int weekEndRate) {
+	public Hotels(String nameOfTheHotel, int weekDayRent,int weekEndRent) {
 		
-		this.nameOfHotel = nameOfHotel;
-		this.weekDayRate =  weekDayRate;
-		this.weekEndRate =   weekEndRate;
+		nameOfHotel = nameOfTheHotel;
+		weekDayRate =  weekDayRent;
+		weekEndRate =   weekEndRent;
 	}
 	
 	public String getName() {
 		return nameOfHotel;
 	}
-	public void setName(String nameOfHotel) {
-		this.nameOfHotel = nameOfHotel;
+	public void setName(String nameOfTheHotel) {
+		nameOfHotel = nameOfTheHotel;
 	}
 	public int getWeekDayRate() {
 		return weekDayRate;
 	}
-	public void setWeekDayRate(int rate) {
-		this. weekDayRate = weekDayRate;
+	public void setWeekDayRate(int weekDayRent) {
+		 weekDayRate = weekDayRent;
 	}
 	public int getWeekEndRate() {
 		return weekEndRate;
 	}
-	public void setWeekEndRate(int rate) {
-		this. weekEndRate = weekEndRate;
+	public void setWeekEndRate(int  weekEndRent) {
+		weekEndRate =  weekEndRent;
 	}
 }
 
@@ -46,6 +47,7 @@ public class HotelReservation {
 	public static Scanner inputFeed=new Scanner(System.in);
 	public static final Logger log=LogManager.getLogger(HotelReservation.class);
 	public static List<Hotels> listOfHotels=new ArrayList<>();
+	private static final List<DayOfWeek> WEEKENDDAYS = Arrays.asList(new DayOfWeek[] { DayOfWeek.SATURDAY,DayOfWeek.SUNDAY });
    
 	public static void addingHotel() {
 		char choice=0;
@@ -66,6 +68,7 @@ public class HotelReservation {
 	}
 		
 		public static void cheapestHotel() {
+			
 			 log.info("Enter  the check-in date in the format DDMMMYYYY (like 10OCT2020): ");
 		    String checkInDate=inputFeed.nextLine();
 		    log.info("Enter  the check-out date in the format DDMMMYYYY (like 12OCT2020): ");
@@ -73,8 +76,12 @@ public class HotelReservation {
 			DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd MMM yyyy");
 			LocalDate checkInFeed= LocalDate.parse(checkInDate, dateFormat);
 			LocalDate checkOutFeed = LocalDate.parse(checkOutDate, dateFormat);
-			Integer numOfDays = (Integer) ChronoUnit.DAYS.between(checkInDate,checkOutDate) + 1;
-			Map<Hotels, Integer> hotelRateMap=listOfHotels.stream().collect(Collectors.toMap(hotelOb->hotelOb, hotelOb->hotelOb.getWeekDayRate()*numOfDays));
+			List<DayOfWeek> weekContainer = new ArrayList<DayOfWeek>();
+			int numofWeekEnds = (int) weekContainer.stream().filter(day -> WEEKENDDAYS.contains(day)).count();
+			int numOfWeekDays = weekContainer.size() - numofWeekEnds;
+			
+			Map<Hotels, Integer> hotelRateMap=listOfHotels.stream().collect(Collectors.toMap<(hotelOb->hotelOb.getName(),hotelOb->hotelOb.getWeekDayRate()* numOfWeekDays,hotelOb->hotelOb.getWeekEndRate()*numofWeekEnds));
+			
 			Hotels cheapestHotelInAll=hotelRateMap.keySet().stream().min((n1,n2)->hotelRateMap.get(n1)-hotelRateMap.get(n2)).orElse(null);
 			log.info(cheapestHotelInAll.getName()+",Rate(in Dollars) : "+hotelRateMap.get(cheapestHotelInAll));
 			log.info("The cheapest Hotel is :"+ cheapestHotelInAll);

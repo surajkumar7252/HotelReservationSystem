@@ -15,14 +15,19 @@ import org.apache.logging.log4j.Logger;
 	public static String nameOfHotel;
 	public static int weekDayRate;
 	public static int weekEndRate;
+	public static int specialWeekDayRate;
+	public static int specialWeekEndRate;
+	
 	public static int rating;
 	
-	public Hotels(String nameOfTheHotel, int weekDayRent,int weekEndRent,int ratingForHotel) {
+	public Hotels(String nameOfTheHotel, int weekDayRent,int weekEndRent,int ratingForHotel,int specialWeekDayRateOfHotel,int  specialWeekEndRateOfHotel) {
 		
 		nameOfHotel = nameOfTheHotel;
 		weekDayRate =  weekDayRent;
 		weekEndRate =   weekEndRent;
 		rating=ratingForHotel;
+		specialWeekDayRate= specialWeekDayRateOfHotel;
+		specialWeekEndRate= specialWeekDayRateOfHotel;
 	}
 	
 	public String getName() {
@@ -49,6 +54,18 @@ import org.apache.logging.log4j.Logger;
 	public void setRating(int  ratingForHotel) {
 		rating =  ratingForHotel;
 	}
+	public int getSpecialWeekDayRate() {
+		return specialWeekDayRate;
+	}
+	public void setSpecialWeekDayRate(int specialWeekDayRateOfHotel) {
+		specialWeekDayRate =  specialWeekDayRateOfHotel;
+	}
+	public int getSpecialWeekEndRate() {
+		return specialWeekEndRate;
+	}
+	public void setspecialWeekEndRate(int  specialWeekEndRateOfHotel) {
+		specialWeekEndRate =  specialWeekEndRateOfHotel;
+	}
 }
 
 public class HotelReservation {
@@ -70,8 +87,13 @@ public class HotelReservation {
 			int weekEndRent=inputFeed.nextInt();
 			log.info("Enter Rating for your stay in the hotel: ");
 			int rating=inputFeed.nextInt();
+			log.info("Enter special Week Day rate for the stay in hotel: ");
+			int specialWeekDayRate=inputFeed.nextInt();
+			log.info("Enter special Week End rate for the stay in hotel: ");
+			int specialWeekEndRate=inputFeed.nextInt();
 			
-			Hotels hotelOb=new Hotels(nameOfHotel,weekDayRent,weekEndRent,rating);
+			
+			Hotels hotelOb=new Hotels(nameOfHotel,weekDayRent,weekEndRent,rating,specialWeekDayRate,specialWeekEndRate);
 			listOfHotels.add(hotelOb);
 			log.info("Do you want to perform again: ");
 			choice=inputFeed.next().charAt(0);

@@ -56,6 +56,7 @@ public class HotelReservation {
 	public static final Logger log=LogManager.getLogger(HotelReservation.class);
 	public static List<Hotels> listOfHotels=new ArrayList<>();
 	private static final List<DayOfWeek> WEEKENDDAYS = Arrays.asList(new DayOfWeek[] { DayOfWeek.SATURDAY,DayOfWeek.SUNDAY });
+	
    
 	public static void addingHotel() {
 		char choice=0;
@@ -77,6 +78,7 @@ public class HotelReservation {
 			
 		}
 	}
+	    
 		
 		public static void cheapestHighestRatedHotel() {
 			
@@ -103,6 +105,31 @@ public class HotelReservation {
 			log.info("The cheapest Hotel is :"+ cheapestHotelInAll);
 		}
 	
+		public void bestRatedHotel() {
+			HotelReservation reserve=new HotelReservation();
+			
+			 log.info("Enter  the check-in date in the format DDMMMYYYY (like 10OCT2020): ");
+			    String checkInDate=inputFeed.nextLine();
+			    log.info("Enter  the check-out date in the format DDMMMYYYY (like 12OCT2020): ");
+			    String checkOutDate=inputFeed.nextLine();
+				DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd MMM yyyy");
+				LocalDate checkInFeed= LocalDate.parse(checkInDate, dateFormat);
+				LocalDate checkOutFeed = LocalDate.parse(checkOutDate, dateFormat);
+				List<DayOfWeek> weekContainer = new ArrayList<DayOfWeek>();
+				Integer numofWeekEnds = (int) weekContainer.stream().filter(day -> WEEKENDDAYS.contains(day)).count();
+				Integer numOfWeekDays = weekContainer.size() - numofWeekEnds;
+			    Hotels  bestRatedHotelAvailable = listOfHotels.stream().max((firstHotel, secondHotel) -> firstHotel.getRating() -secondHotel.getRating())
+					.orElse(null);
+			try {
+				int dayBill =bestRatedHotelAvailable.getWeekDayRate() * numOfWeekDays
+						+ bestRatedHotelAvailable.getWeekEndRate() * numofWeekEnds;
+				log.info(bestRatedHotelAvailable.getName() + " & Total Rates $" + dayBill);
+			} catch (NullPointerException e) {
+				log.info("Hotel Not found");
+			}
+			log.info("The Best rated  Hotel available  is :"+ bestRatedHotelAvailable);
+			
+		}
 		
 	public static void main( String[] args )
     {   Integer choice=0;

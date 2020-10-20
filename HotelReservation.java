@@ -78,7 +78,7 @@ public class HotelReservation {
 		}
 	}
 		
-		public static void cheapestHotel() {
+		public static void cheapestHighestRatedHotel() {
 			
 			 log.info("Enter  the check-in date in the format DDMMMYYYY (like 10OCT2020): ");
 		    String checkInDate=inputFeed.nextLine();
@@ -88,17 +88,22 @@ public class HotelReservation {
 			LocalDate checkInFeed= LocalDate.parse(checkInDate, dateFormat);
 			LocalDate checkOutFeed = LocalDate.parse(checkOutDate, dateFormat);
 			List<DayOfWeek> weekContainer = new ArrayList<DayOfWeek>();
-			int numofWeekEnds = (int) weekContainer.stream().filter(day -> WEEKENDDAYS.contains(day)).count();
-			int numOfWeekDays = weekContainer.size() - numofWeekEnds;
+			Integer numofWeekEnds = (int) weekContainer.stream().filter(day -> WEEKENDDAYS.contains(day)).count();
+			Integer numOfWeekDays = weekContainer.size() - numofWeekEnds;
 			
 			Map<Hotels, Integer> hotelRateMap=listOfHotels.stream().collect(Collectors.toMap<(hotelOb->hotelOb.getName(),hotelOb->hotelOb.getWeekDayRate()* numOfWeekDays,hotelOb->hotelOb.getWeekEndRate()*numofWeekEnds));
 			
-			Hotels cheapestHotelInAll=hotelRateMap.keySet().stream().min((n1,n2)->hotelRateMap.get(n1)-hotelRateMap.get(n2)).orElse(null);
+			Hotels cheapestHotelInAll=hotelRateMap.keySet().stream().min((firstHotel,secondHotel)->{
+			Integer differenceInRate=hotelToTotalRateMap.get(firstHotel) - hotelToTotalRateMap.get(secondHotel);
+			Integer differenceInRating =firstHotel.getRating() - secondHotel.getRating();
+			if(differenceInRate==0) return differenceInRate=differenceInRating;
+			if(differenceInRate!=0) return differenceInRate=differenceInRate;
+			}).orElse(null);
 			log.info(cheapestHotelInAll.getName()+",Rate(in Dollars) : "+hotelRateMap.get(cheapestHotelInAll));
 			log.info("The cheapest Hotel is :"+ cheapestHotelInAll);
 		}
 	
-	
+		
 	public static void main( String[] args )
     {   Integer choice=0;
     HotelReservation reservation=new HotelReservation ();
@@ -113,7 +118,7 @@ public class HotelReservation {
 	          break;
 	  case 2:  log.info("The cheapest Hotel is :");
 	          
-	           reservation.cheapestHotel();
+	           reservation.cheapestHighestRatedHotel();
 	           break;
 	  }
        

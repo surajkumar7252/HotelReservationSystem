@@ -15,12 +15,14 @@ import org.apache.logging.log4j.Logger;
 	public static String nameOfHotel;
 	public static int weekDayRate;
 	public static int weekEndRate;
+	public static int rating;
 	
-	public Hotels(String nameOfTheHotel, int weekDayRent,int weekEndRent) {
+	public Hotels(String nameOfTheHotel, int weekDayRent,int weekEndRent,int ratingForHotel) {
 		
 		nameOfHotel = nameOfTheHotel;
 		weekDayRate =  weekDayRent;
 		weekEndRate =   weekEndRent;
+		rating=ratingForHotel;
 	}
 	
 	public String getName() {
@@ -41,6 +43,12 @@ import org.apache.logging.log4j.Logger;
 	public void setWeekEndRate(int  weekEndRent) {
 		weekEndRate =  weekEndRent;
 	}
+	public int getRating() {
+		return rating;
+	}
+	public void setRating(int  ratingForHotel) {
+		rating =  ratingForHotel;
+	}
 }
 
 public class HotelReservation {
@@ -59,7 +67,10 @@ public class HotelReservation {
 			int weekDayRent=inputFeed.nextInt();
 			log.info("Enter week-End cost of staying in hotel: ");
 			int weekEndRent=inputFeed.nextInt();
-			Hotels hotelOb=new Hotels(nameOfHotel,weekDayRent,weekEndRent);
+			log.info("Enter Rating for your stay in the hotel: ");
+			int rating=inputFeed.nextInt();
+			
+			Hotels hotelOb=new Hotels(nameOfHotel,weekDayRent,weekEndRent,rating);
 			listOfHotels.add(hotelOb);
 			log.info("Do you want to perform again: ");
 			choice=inputFeed.next().charAt(0);

@@ -6,6 +6,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
@@ -19,15 +21,30 @@ import org.apache.logging.log4j.Logger;
 	public static int specialWeekEndRate;
 	
 	public static int rating;
+	public enum ProgramType {
+		REGULAR, REWARDS
+	}
+	public static ProgramType programtype;
+	private static final Pattern PROGRAM_TYPE_PATTERN = Pattern.compile("RE([gw][GW])([ua][UA])([LR][lr])([AD][ad])([RS][rs])");
 	
-	public Hotels(String nameOfTheHotel, int weekDayRent,int weekEndRent,int ratingForHotel,int specialWeekDayRateOfHotel,int  specialWeekEndRateOfHotel) {
+	public Hotels(String nameOfTheHotel, int weekDayRent,int weekEndRent,int ratingForHotel,int specialWeekDayRateOfHotel,int  specialWeekEndRateOfHotel,String programtypeGiven) {
 		
 		nameOfHotel = nameOfTheHotel;
 		weekDayRate =  weekDayRent;
 		weekEndRate =   weekEndRent;
 		rating=ratingForHotel;
 		specialWeekDayRate= specialWeekDayRateOfHotel;
-		specialWeekEndRate= specialWeekDayRateOfHotel;
+		specialWeekEndRate= specialWeekEndRateOfHotel;
+		Matcher PROGRAM_TYPE_MATCHER  =  PROGRAM_TYPE_PATTERN.matcher(programtypeGiven);
+		
+		ProgramType programType = ProgramType.REGULAR;
+		if (PROGRAM_TYPE_MATCHER.find()) {
+			if (PROGRAM_TYPE_MATCHER.group().equals("Rewards")) {
+				programType =ProgramType.REWARDS;
+			}
+		}
+			
+			
 	}
 	
 	public String getName() {
@@ -66,17 +83,29 @@ import org.apache.logging.log4j.Logger;
 	public void setspecialWeekEndRate(int  specialWeekEndRateOfHotel) {
 		specialWeekEndRate =  specialWeekEndRateOfHotel;
 	}
-}
+		public ProgramType programtype() {
+			return programtype;
+		}
+
+		public void setProgramType(ProgramType programtype) {
+			this.programtype = programtype;
+		}
+	}
+
 
 public class HotelReservation {
 	public static Scanner inputFeed=new Scanner(System.in);
+	private static final Pattern DATE_PATTERN = Pattern.compile("([0-9]{2}[A-Z][a-z]{3}[0-9]{4}");
+	
 	public static final Logger log=LogManager.getLogger(HotelReservation.class);
 	public static List<Hotels> listOfHotels=new ArrayList<>();
 	private static final List<DayOfWeek> WEEKENDDAYS = Arrays.asList(new DayOfWeek[] { DayOfWeek.SATURDAY,DayOfWeek.SUNDAY });
 	
-   
+  
 	public static void addingHotel() {
 		char choice=0;
+		
+		
 		while(choice=='Y'|| choice=='y') {
 			log.info("Enter  name of the hotel: ");
 			String nameOfHotel=inputFeed.nextLine();
@@ -91,9 +120,11 @@ public class HotelReservation {
 			int specialWeekDayRate=inputFeed.nextInt();
 			log.info("Enter special Week End rate for the stay in hotel: ");
 			int specialWeekEndRate=inputFeed.nextInt();
+			log.info("Enter the program type to book in hotel: ");
+			String specialprogram=inputFeed.nextLine();
 			
 			
-			Hotels hotelOb=new Hotels(nameOfHotel,weekDayRent,weekEndRent,rating,specialWeekDayRate,specialWeekEndRate);
+			Hotels hotelOb=new Hotels(nameOfHotel,weekDayRent,weekEndRent,rating,specialWeekDayRate,specialWeekEndRate,specialprogram);
 			listOfHotels.add(hotelOb);
 			log.info("Do you want to perform again: ");
 			choice=inputFeed.next().charAt(0);
@@ -106,8 +137,14 @@ public class HotelReservation {
 			
 		    log.info("Enter  the check-in date in the format DDMMMYYYY (like 10OCT2020): ");
 		    String checkInDate=inputFeed.nextLine();
+		    Matcher IN_DATE_MATCHER  = DATE_PATTERN.matcher(checkInDate);
+		    if(!IN_DATE_MATCHER.find())
+		    	log.info("Invalid Date Format .Enter  the check-out date in the format DDMMMYYYY (like 12OCT2020): ");
 		    log.info("Enter  the check-out date in the format DDMMMYYYY (like 12OCT2020): ");
 		    String checkOutDate=inputFeed.nextLine();
+		    Matcher OUT_DATE_MATCHER  = DATE_PATTERN.matcher(checkOutDate);
+		    if(!IN_DATE_MATCHER.find())
+		    	log.info("Invalid Date Format .Enter  the check-out date in the format DDMMMYYYY (like 12OCT2020): ");
 			DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd MMM yyyy");
 			LocalDate checkInFeed= LocalDate.parse(checkInDate, dateFormat);
 			LocalDate checkOutFeed = LocalDate.parse(checkOutDate, dateFormat);
@@ -131,8 +168,14 @@ public class HotelReservation {
 			
 			    log.info("Enter  the check-in date in the format DDMMMYYYY (like 10OCT2020): ");
 			    String checkInDate=inputFeed.nextLine();
+			    Matcher IN_DATE_MATCHER  = DATE_PATTERN.matcher(checkInDate);
+			    if(!IN_DATE_MATCHER.find())
+			    	log.info("Invalid Date Format .Enter  the check-out date in the format DDMMMYYYY (like 12OCT2020): ");
 			    log.info("Enter  the check-out date in the format DDMMMYYYY (like 12OCT2020): ");
 			    String checkOutDate=inputFeed.nextLine();
+			    Matcher OUT_DATE_MATCHER  = DATE_PATTERN.matcher(checkOutDate);
+			    if(!IN_DATE_MATCHER.find())
+			    	log.info("Invalid Date Format .Enter  the check-out date in the format DDMMMYYYY (like 12OCT2020): ");
 				DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd MMM yyyy");
 				LocalDate checkInFeed= LocalDate.parse(checkInDate, dateFormat);
 				LocalDate checkOutFeed = LocalDate.parse(checkOutDate, dateFormat);
@@ -155,8 +198,14 @@ public class HotelReservation {
 			
 			log.info("Enter  the check-in date in the format DDMMMYYYY (like 10OCT2020): ");
 		    String checkInDate=inputFeed.nextLine();
+		    Matcher IN_DATE_MATCHER  = DATE_PATTERN.matcher(checkInDate);
+		    if(!IN_DATE_MATCHER.find())
+		    	log.info("Invalid Date Format .Enter  the check-out date in the format DDMMMYYYY (like 12OCT2020): ");
 		    log.info("Enter  the check-out date in the format DDMMMYYYY (like 12OCT2020): ");
 		    String checkOutDate=inputFeed.nextLine();
+		    Matcher OUT_DATE_MATCHER  = DATE_PATTERN.matcher(checkOutDate);
+		    if(!IN_DATE_MATCHER.find())
+		    	log.info("Invalid Date Format .Enter  the check-out date in the format DDMMMYYYY (like 12OCT2020): ");
 			DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd MMM yyyy");
 			LocalDate checkInFeed= LocalDate.parse(checkInDate, dateFormat);
 			LocalDate checkOutFeed = LocalDate.parse(checkOutDate, dateFormat);

@@ -104,7 +104,7 @@ public class HotelReservation {
 		
 		public static void cheapestHighestRatedHotel() {
 			
-			 log.info("Enter  the check-in date in the format DDMMMYYYY (like 10OCT2020): ");
+		    log.info("Enter  the check-in date in the format DDMMMYYYY (like 10OCT2020): ");
 		    String checkInDate=inputFeed.nextLine();
 		    log.info("Enter  the check-out date in the format DDMMMYYYY (like 12OCT2020): ");
 		    String checkOutDate=inputFeed.nextLine();
@@ -128,9 +128,8 @@ public class HotelReservation {
 		}
 	
 		public void bestRatedHotel() {
-			HotelReservation reserve=new HotelReservation();
 			
-			 log.info("Enter  the check-in date in the format DDMMMYYYY (like 10OCT2020): ");
+			    log.info("Enter  the check-in date in the format DDMMMYYYY (like 10OCT2020): ");
 			    String checkInDate=inputFeed.nextLine();
 			    log.info("Enter  the check-out date in the format DDMMMYYYY (like 12OCT2020): ");
 			    String checkOutDate=inputFeed.nextLine();
@@ -152,23 +151,48 @@ public class HotelReservation {
 			log.info("The Best rated  Hotel available  is :"+ bestRatedHotelAvailable);
 			
 		}
+		public static void cheapestHighestRatedHotelUnderRewardProgram() {
+			
+			log.info("Enter  the check-in date in the format DDMMMYYYY (like 10OCT2020): ");
+		    String checkInDate=inputFeed.nextLine();
+		    log.info("Enter  the check-out date in the format DDMMMYYYY (like 12OCT2020): ");
+		    String checkOutDate=inputFeed.nextLine();
+			DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd MMM yyyy");
+			LocalDate checkInFeed= LocalDate.parse(checkInDate, dateFormat);
+			LocalDate checkOutFeed = LocalDate.parse(checkOutDate, dateFormat);
+			List<DayOfWeek> weekContainer = new ArrayList<DayOfWeek>();
+			Integer numOfSpecialWeekEnds = (int) weekContainer.stream().filter(day -> WEEKENDDAYS.contains(day)).count();
+			Integer numOfSpecialWeekDays = weekContainer.size() - numofWeekEnds;
+			
+			Map<Hotels, Integer> hotelRateMap=listOfHotels.stream().collect(Collectors.toMap<(hotelOb->hotelOb.getName(),hotelOb->hotelOb.getSpecialWeekDayRate()* numOfSpecialWeekDays,hotelOb->hotelOb.getSpecialWeekEndRate()*numOfSpecialWeekEnds));
+			
+			Hotels cheapestHotelInAll=hotelRateMap.keySet().stream().min((firstHotel,secondHotel)->{
+			Integer differenceInRate=hotelToTotalRateMap.get(firstHotel) - hotelToTotalRateMap.get(secondHotel);
+			Integer differenceInRating =firstHotel.getRating() - secondHotel.getRating();
+			if(differenceInRate==0)  differenceInRate=differenceInRating;
+			if(differenceInRate!=0)  differenceInRate=differenceInRate;
+			}).orElse(null);
+			log.info(cheapestHotelInAll.getName()+",Rate(in Dollars) : "+hotelRateMap.get(cheapestHotelInAll));
+			log.info("The cheapest Hotel is :"+ cheapestHotelInAll);
+		}
+	
 		
 	public static void main( String[] args )
     {   Integer choice=0;
-    HotelReservation reservation=new HotelReservation ();
+    
        log.info( "Welcome to Hotel Reservation System" );
        log.info("What operation do you want to perform: ");
        log.info("1.Adding Hotels Data. ");
-       log.info("2.Finding the cheapest hotel in-between Dates. ");
-       
+       log.info("2.Finding the cheapest best rated hotel in-between Dates. ");
+       log.info("3.Finding the cheapest best rated hotel in-between Dates under Loyalty Program. ");
 	  choice=inputFeed.nextInt();
 	  switch(choice) {
-	  case 1:reservation.addingHotel();
+	  case 1:addingHotel();
 	          break;
-	  case 2:  log.info("The cheapest Hotel is :");
-	          
-	           reservation.cheapestHighestRatedHotel();
+	  case 2:  cheapestHighestRatedHotel();
 	           break;
+	  case 3:  cheapestHighestRatedHotelUnderRewardProgram();
+               break;
 	  }
        
     }
